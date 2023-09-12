@@ -320,43 +320,97 @@ void FileAttributes()
 
     if (fileAttributes != INVALID_FILE_ATTRIBUTES)
     {
-        std::cout << "File Attributes for " << fileName << ":\n";
+        std::cout << "\nFile Attributes:\n";
+        std::cout << "Read-only: " << ((fileAttributes & FILE_ATTRIBUTE_READONLY) ? "Yes" : "No") << std::endl;
+        std::cout << "Hidden: " << ((fileAttributes & FILE_ATTRIBUTE_HIDDEN) ? "Yes" : "No") << std::endl;
+        std::cout << "Archive: " << ((fileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? "Yes" : "No") << std::endl;
+        std::cout << "System: " << ((fileAttributes & FILE_ATTRIBUTE_SYSTEM) ? "Yes" : "No") << std::endl;
 
-        // Check and display file attributes
-        if (fileAttributes & FILE_ATTRIBUTE_DIRECTORY) std::cout << "Directory\n";
-        else std::cout << "File\n";
-
-        if (fileAttributes & FILE_ATTRIBUTE_READONLY) std::cout << "Read-only\n";
-        else std::cout << "Not Read-only\n";
-
-        if (fileAttributes & FILE_ATTRIBUTE_HIDDEN)std::cout << "Hidden\n";
-        else std::cout << "Not Hidden\n";
-
-        if (fileAttributes & FILE_ATTRIBUTE_SYSTEM) std::cout << "System\n";
-        else std::cout << "Not System\n";
-
-        // Modify file attributes if desired
+        // Ask the user if they want to modify attributes
         char choice;
-        printf("\033[1;31;40m");
-        puts("Do you want to modify file attributes (Y/N)?");
-        printf("\033[0m");
+        std::cout << "\nDo you want to modify attributes? (Y/N): ";
         std::cin >> choice;
 
         if (choice == 'Y' || choice == 'y')
         {
-            std::cout << "Enter new attributes (e.g., R for read-only, H for hidden, S for system):\n";
-            std::string newAttributes;
-            std::cin >> newAttributes;
+            DWORD newAttributes = 0;
 
-            // Calculate new file attributes
-            DWORD newFileAttributes = 0;
-            if (newAttributes.find('R') != std::string::npos) newFileAttributes |= FILE_ATTRIBUTE_READONLY;
-            if (newAttributes.find('H') != std::string::npos) newFileAttributes |= FILE_ATTRIBUTE_HIDDEN;
-            if (newAttributes.find('S') != std::string::npos) newFileAttributes |= FILE_ATTRIBUTE_SYSTEM;
+            std::cout << "Set Read-only (Y/N): ";
+            std::cin >> choice;
+            if (choice == 'Y' || choice == 'y') newAttributes |= FILE_ATTRIBUTE_READONLY;
 
-            // Set the new attributes
-            if (SetFileAttributes(fileName.c_str(), newFileAttributes)) std::cout << "File attributes modified successfully.\n";
+            std::cout << "Set Hidden (Y/N): ";
+            std::cin >> choice;
+            if (choice == 'Y' || choice == 'y') newAttributes |= FILE_ATTRIBUTE_HIDDEN;
+
+            std::cout << "Set Archive (Y/N): ";
+            std::cin >> choice;
+            if (choice == 'Y' || choice == 'y') newAttributes |= FILE_ATTRIBUTE_ARCHIVE;
+
+            std::cout << "Set System (Y/N): ";
+            std::cin >> choice;
+            if (choice == 'Y' || choice == 'y') newAttributes |= FILE_ATTRIBUTE_SYSTEM;
+
+            if (SetFileAttributes(fileName.c_str(), newAttributes)) std::cout << "File attributes modified successfully.\n";
             else std::cerr << "Error modifying file attributes. Error code: " << GetLastError() << std::endl;
+        }
+
+        // Ask the user if they want to view file information
+        std::cout << "Do you want to view file information? (Y/N): ";
+        std::cin >> choice;
+
+        if (choice == 'Y' || choice == 'y')
+        {
+            HANDLE hFile = CreateFile
+            (
+                fileName.c_str(),
+                GENERIC_READ,
+                FILE_SHARE_READ,
+                NULL,
+                OPEN_EXISTING,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
+            );
+
+            if (hFile != INVALID_HANDLE_VALUE)
+            {
+                FILETIME creationTime, lastAccessTime, lastWriteTime;
+                if (GetFileTime(hFile, &creationTime, &lastAccessTime, &lastWriteTime))
+                {
+                    SYSTEMTIME st;
+                    FileTimeToSystemTime(&creationTime, &st);
+                    std::cout << "Creation Time: " << st.wYear << "/" << st.wMonth << "/" << st.wDay << " " << st.wHour << ":" << st.wMinute << std::endl;
+
+                    // Ask if user wants to modify file times
+                    std::cout << "Do you want to modify file times? (Y/N): ";
+                    std::cin >> choice;
+
+                    if (choice == 'Y' || choice == 'y')
+                    {
+                        // Modify file times
+                        SYSTEMTIME newTime;
+                        FILETIME newCreationTime, newAccessTime, newWriteTime;
+
+                        std::cout << "Enter new creation time (YYYY MM DD HH MM): ";
+                        std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
+                        SystemTimeToFileTime(&newTime, &newCreationTime);
+
+                        std::cout << "Enter new access time (YYYY MM DD HH MM): ";
+                        std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
+                        SystemTimeToFileTime(&newTime, &newAccessTime);
+
+                        std::cout << "Enter new write time (YYYY MM DD HH MM): ";
+                        std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
+                        SystemTimeToFileTime(&newTime, &newWriteTime);
+
+                        if (SetFileTime(hFile, &newCreationTime, &newAccessTime, &newWriteTime)) std::cout << "File times modified successfully.\n";
+                        else std::cerr << "Error modifying file times. Error code: " << GetLastError() << std::endl;
+                    }
+                }
+                else std::cerr << "Error getting file time information. Error code: " << GetLastError() << std::endl;
+                CloseHandle(hFile);
+            }
+            else std::cerr << "Error opening file. Error code: " << GetLastError() << std::endl;
         }
     }
     else std::cerr << "Error getting file attributes. Error code: " << GetLastError() << std::endl;
