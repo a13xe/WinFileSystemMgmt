@@ -11,7 +11,7 @@
   
 ## :joystick: Usage
 
-- Compile the code using [Code::Blocks](https://www.codeblocks.org/downloads/binaries/), [Visual Studio](https://visualstudio.microsoft.com/ru/thank-you-downloading-visual-studio/?sku=Community&channel=Release&version=VS2022&source=VSLandingPage&cid=2030&passive=false) or other preferred C++ compiler.
+- Compile the code using [Code::Blocks](https://www.codeblocks.org/downloads/binaries/), [Visual Studio](https://visualstudio.microsoft.com/downloads/) or other preferred C++ compiler.
 - Run the executable.
 - Use the menu to select the desired action by entering the corresponding number.
 
