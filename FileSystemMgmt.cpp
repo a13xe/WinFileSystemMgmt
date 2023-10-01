@@ -11,6 +11,7 @@ void CreateFile();
 void CopyFile();
 void MoveFile();
 void FileAttributes();
+void FileTimestamps();
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,6 +39,7 @@ int main()
         puts("\033[1;32;40m 6 \033[0m- Copy file");
         puts("\033[1;32;40m 7 \033[0m- Move file");
         puts("\033[1;32;40m 8 \033[0m- File attributes");
+        puts("\033[1;32;40m 9 \033[0m- File timestamps");
         puts("----------------------------------------------------");
         puts("\033[1;32;40m 0 \033[0m- to EXIT the program");
         puts("----------------------------------------------------");
@@ -69,6 +71,9 @@ int main()
                 break;
             case 8:
                 FileAttributes();
+                break;
+            case 9:
+                FileTimestamps();
                 break;
             case 0:
                 return 0;
@@ -320,7 +325,7 @@ void FileAttributes()
 
     if (fileAttributes != INVALID_FILE_ATTRIBUTES)
     {
-        std::cout << "\nFile Attributes:\n";
+        std::cout << "\n\n";
         std::cout << "Read-only: " << ((fileAttributes & FILE_ATTRIBUTE_READONLY) ? "Yes" : "No") << std::endl;
         std::cout << "Hidden: " << ((fileAttributes & FILE_ATTRIBUTE_HIDDEN) ? "Yes" : "No") << std::endl;
         std::cout << "Archive: " << ((fileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? "Yes" : "No") << std::endl;
@@ -354,68 +359,92 @@ void FileAttributes()
             if (SetFileAttributes(fileName.c_str(), newAttributes)) std::cout << "File attributes modified successfully.\n";
             else std::cerr << "Error modifying file attributes. Error code: " << GetLastError() << std::endl;
         }
-
-        // Ask the user if they want to view file information
-        std::cout << "Do you want to view file information? (Y/N): ";
-        std::cin >> choice;
-
-        if (choice == 'Y' || choice == 'y')
-        {
-            HANDLE hFile = CreateFile
-            (
-                fileName.c_str(),
-                GENERIC_READ,
-                FILE_SHARE_READ,
-                NULL,
-                OPEN_EXISTING,
-                FILE_ATTRIBUTE_NORMAL,
-                NULL
-            );
-
-            if (hFile != INVALID_HANDLE_VALUE)
-            {
-                FILETIME creationTime, lastAccessTime, lastWriteTime;
-                if (GetFileTime(hFile, &creationTime, &lastAccessTime, &lastWriteTime))
-                {
-                    SYSTEMTIME st;
-                    FileTimeToSystemTime(&creationTime, &st);
-                    std::cout << "Creation Time: " << st.wYear << "/" << st.wMonth << "/" << st.wDay << " " << st.wHour << ":" << st.wMinute << std::endl;
-
-                    // Ask if user wants to modify file times
-                    std::cout << "Do you want to modify file times? (Y/N): ";
-                    std::cin >> choice;
-
-                    if (choice == 'Y' || choice == 'y')
-                    {
-                        // Modify file times
-                        SYSTEMTIME newTime;
-                        FILETIME newCreationTime, newAccessTime, newWriteTime;
-
-                        std::cout << "Enter new creation time (YYYY MM DD HH MM): ";
-                        std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
-                        SystemTimeToFileTime(&newTime, &newCreationTime);
-
-                        std::cout << "Enter new access time (YYYY MM DD HH MM): ";
-                        std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
-                        SystemTimeToFileTime(&newTime, &newAccessTime);
-
-                        std::cout << "Enter new write time (YYYY MM DD HH MM): ";
-                        std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
-                        SystemTimeToFileTime(&newTime, &newWriteTime);
-
-                        if (SetFileTime(hFile, &newCreationTime, &newAccessTime, &newWriteTime)) std::cout << "File times modified successfully.\n";
-                        else std::cerr << "Error modifying file times. Error code: " << GetLastError() << std::endl;
-                    }
-                }
-                else std::cerr << "Error getting file time information. Error code: " << GetLastError() << std::endl;
-                CloseHandle(hFile);
-            }
-            else std::cerr << "Error opening file. Error code: " << GetLastError() << std::endl;
-        }
     }
     else std::cerr << "Error getting file attributes. Error code: " << GetLastError() << std::endl;
 
     // Pause and clear the console screen
     system("pause");
     system("cls");
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// File Timestamps:
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void FileTimestamps()
+{
+    std::string fileName;
+    std::cout << "Enter file name: ";
+    std::cin >> fileName;
+
+    HANDLE hFile = CreateFile
+    (
+        fileName.c_str(),
+        GENERIC_READ | GENERIC_WRITE,
+        FILE_SHARE_READ,
+        NULL,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+
+    if (hFile != INVALID_HANDLE_VALUE)
+    {
+        FILETIME creationTime, lastAccessTime, lastWriteTime;
+        if (GetFileTime(hFile, &creationTime, &lastAccessTime, &lastWriteTime))
+        {
+            SYSTEMTIME st;
+            FileTimeToSystemTime(&creationTime, &st);
+            std::cout << "Creation Time: " << st.wYear << "/" << st.wMonth << "/" << st.wDay << " " << st.wHour << ":" << st.wMinute << std::endl;
+
+            // Ask if the user wants to modify file times
+            char choice;
+            std::cout << "Do you want to modify file times? (Y/N): ";
+            std::cin >> choice;
+
+            if (choice == 'Y' || choice == 'y')
+            {
+                SYSTEMTIME newTime;
+                FILETIME newCreationTime, newAccessTime, newWriteTime;
+
+                std::cout << "Enter new creation time (YYYY MM DD HH mm): ";
+                std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
+                newTime.wSecond = 0;
+                newTime.wMilliseconds = 0;
+                SystemTimeToFileTime(&newTime, &newCreationTime);
+
+                std::cout << "Enter new modify time (YYYY MM DD HH mm): ";
+                std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
+                newTime.wSecond = 0;
+                newTime.wMilliseconds = 0;
+                SystemTimeToFileTime(&newTime, &newWriteTime);
+
+                std::cout << "Enter new access time (YYYY MM DD HH mm): ";
+                std::cin >> newTime.wYear >> newTime.wMonth >> newTime.wDay >> newTime.wHour >> newTime.wMinute;
+                newTime.wSecond = 0;
+                newTime.wMilliseconds = 0;
+                SystemTimeToFileTime(&newTime, &newAccessTime);
+
+                if (SetFileTime(hFile, &newCreationTime, &newAccessTime, &newWriteTime))
+                {
+                    std::cout << "File times modified successfully.\n";
+                }
+                else
+                {
+                    std::cerr << "Error modifying file times. Error code: " << GetLastError() << std::endl;
+                }
+            }
+        }
+        else
+        {
+            std::cerr << "Error getting file time information. Error code: " << GetLastError() << std::endl;
+        }
+        CloseHandle(hFile);
+    }
+    else
+    {
+        std::cerr << "Error opening file. Error code: " << GetLastError() << std::endl;
+    }
 }
