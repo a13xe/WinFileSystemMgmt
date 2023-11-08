@@ -11,21 +11,17 @@
   
 ## :joystick: Usage
 
-- Compile the code using [Code::Blocks](https://www.codeblocks.org/downloads/binaries/), [Visual Studio](https://visualstudio.microsoft.com/downloads/) or other preferred C++ compiler.
-- Run the executable.
-- Use the menu to select the desired action by entering the corresponding number.
+- Compile and run the code using [Code::Blocks](https://www.codeblocks.org/downloads/binaries/), [Visual Studio](https://visualstudio.microsoft.com/downloads/) or other preferred C++ compiler.
+- Or simply use [this](https://github.com/a13xe/WinFileSystemMgmt/releases/download/v1.0.0/FileSystemMgmt.exe) compiled release executable.
+- Select the desired action by entering the corresponding number in the menu.
 
 ## :warning: Note
 
 This utility is intended for educational purposes and may not cover all edge cases or error handling scenarios. 
 Use with caution and ensure that you have appropriate permissions for the file system operations you perform.
 
-## :id: License
-
-This code is provided as-is with no warranties. You are free to use, modify, and distribute it in accordance with your needs.
-
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 <p align="center">
-<img width=100% src="https://github.com/a13xe/WinFileSystemMgmt/blob/main/assets/ui.png?raw=true"> 
+<img width=98% src="https://github.com/a13xe/WinFileSystemMgmt/blob/main/assets/ui.png?raw=true"> 
 </p>
