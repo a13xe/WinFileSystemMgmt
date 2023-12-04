@@ -325,7 +325,7 @@ void FileAttributes()
 
     if (fileAttributes != INVALID_FILE_ATTRIBUTES)
     {
-        std::cout << "\n\n";
+        std::cout << "\n";
         std::cout << "Read-only: " << ((fileAttributes & FILE_ATTRIBUTE_READONLY) ? "Yes" : "No") << std::endl;
         std::cout << "Hidden: " << ((fileAttributes & FILE_ATTRIBUTE_HIDDEN) ? "Yes" : "No") << std::endl;
         std::cout << "Archive: " << ((fileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? "Yes" : "No") << std::endl;
@@ -375,6 +375,13 @@ void FileAttributes()
 
 void FileTimestamps()
 {
+    system("cls");
+    printf("\033[1;33;40m");
+    puts("----------------------------------------------------");
+    puts("File Timestamps:");
+    puts("----------------------------------------------------");
+    printf("\033[0m");
+    
     std::string fileName;
     std::cout << "Enter file name: ";
     std::cin >> fileName;
