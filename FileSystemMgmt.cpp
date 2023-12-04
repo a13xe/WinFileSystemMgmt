@@ -454,4 +454,7 @@ void FileTimestamps()
     {
         std::cerr << "Error opening file. Error code: " << GetLastError() << std::endl;
     }
+    
+    std::cout << "\n";
+    system("pause");
 }
