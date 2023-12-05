@@ -23,5 +23,5 @@ Use with caution and ensure that you have appropriate permissions for the file s
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 <p align="center">
-<img width=98% src="https://github.com/a13xe/WinFileSystemMgmt/blob/main/assets/ui.png?raw=true"> 
+<img width=98% src="https://github.com/a13xe/WinFileSystemMgmt/assets/77492646/c1e0eca6-b930-450e-8ac5-82f80979b958"> 
 </p>
