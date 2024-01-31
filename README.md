@@ -12,7 +12,7 @@
 ## :joystick: Usage
 
 - Compile and run the code using [Code::Blocks](https://www.codeblocks.org/downloads/binaries/), [Visual Studio](https://visualstudio.microsoft.com/downloads/) or other preferred C++ compiler.
-- Or simply use [this](https://github.com/a13xe/WinFileSystemMgmt/releases/download/v1.0.0/FileSystemMgmt.exe) compiled release executable.
+- Or simply use [this](https://github.com/a13xe/WinFileSystemMgmt/releases/download/v1.0.1/FileSystemMgmt.exe) compiled release executable.
 - Select the desired action by entering the corresponding number in the menu.
 
 ## :warning: Note
