@@ -1,7 +1,7 @@
 ## :feather: Features
 
 - List Drives: Displays a list of available drives.
-- Disk Information: Provides information about a selected drive, including its name, serial number, file system, total space, and free space.
+- Disk Information: This provides information about a selected drive, including its name, serial number, file system, total space, free space, and flags that offer additional details about the volume, such as support for file-based compression and volume quotas.
 - Create Directory: Allows you to create a new directory by specifying its name.
 - Delete Directory: Deletes an existing directory by specifying its name.
 - Create File: Creates a new file by specifying its name.
