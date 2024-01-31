@@ -153,6 +153,18 @@ void DiskInfo()
                 std::cout << "File System: " << ((fileSystemFlags & FILE_SUPPORTS_SPARSE_FILES) ? "NTFS" : "FAT32") << std::endl;
                 std::cout << "Total Space: " << totalNumberOfBytes.QuadPart << " bytes\n";
                 std::cout << "Free Space: " << totalNumberOfFreeBytes.QuadPart << " bytes\n";
+                // More flags
+                std::cout << "Supports Case-sensitive Filenames: " << ((fileSystemFlags & FILE_CASE_SENSITIVE_SEARCH) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports File-based Compression: " << ((fileSystemFlags & FILE_FILE_COMPRESSION) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports Disk Quotas: " << ((fileSystemFlags & FILE_VOLUME_QUOTAS) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports Sparse Files: " << ((fileSystemFlags & FILE_SUPPORTS_SPARSE_FILES) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports Reparse Points: " << ((fileSystemFlags & FILE_SUPPORTS_REPARSE_POINTS) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports Remote Storage: " << ((fileSystemFlags & FILE_SUPPORTS_REMOTE_STORAGE) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports Unicode in Filenames: " << ((fileSystemFlags & FILE_UNICODE_ON_DISK) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports ACLs: " << ((fileSystemFlags & FILE_PERSISTENT_ACLS) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports File-based Encryption: " << ((fileSystemFlags & FILE_SUPPORTS_ENCRYPTION) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports Named Streams: " << ((fileSystemFlags & FILE_NAMED_STREAMS) ? "Yes" : "No") << std::endl;
+                std::cout << "Supports Transactions: " << ((fileSystemFlags & FILE_SUPPORTS_TRANSACTIONS) ? "Yes" : "No") << std::endl;
             }
             else std::cerr << "Error getting disk free space information.\n";
         }
